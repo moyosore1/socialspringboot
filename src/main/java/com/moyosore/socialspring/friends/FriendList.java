@@ -22,11 +22,11 @@ public class FriendList {
 
   @Id
   @SequenceGenerator(
-      name = "post_sequence",
-      sequenceName = "post_sequence",
+      name = "friend_list_sequence",
+      sequenceName = "friend_list_sequence",
       allocationSize = 1
   )
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_sequence")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "friend_list_sequence")
   private Long id;
 
   @OneToOne

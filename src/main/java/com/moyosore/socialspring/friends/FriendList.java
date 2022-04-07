@@ -12,15 +12,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
-public class Friend {
+public class FriendList {
 
   @Id
   @SequenceGenerator(
@@ -43,6 +41,10 @@ public class Friend {
   )
   private List<AppUser> friends;
 
+  public FriendList(AppUser user) {
+    this.user = user;
+  }
+
   public boolean addFriend(AppUser user){
     for(AppUser friend: this.getFriends()){
       if(user == friend){
@@ -63,6 +65,10 @@ public class Friend {
       }
     }
     return false;
+  }
+
+  public int getNumberOfFriends(){
+    return this.getFriends().size();
   }
 
 //  public void unfriend(AppUser user){

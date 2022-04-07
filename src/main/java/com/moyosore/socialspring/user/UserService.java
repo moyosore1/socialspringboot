@@ -1,6 +1,8 @@
 package com.moyosore.socialspring.user;
 
 import com.moyosore.socialspring.exception.ApiRequestException;
+import com.moyosore.socialspring.friends.FriendList;
+import com.moyosore.socialspring.friends.FriendListService;
 import com.moyosore.socialspring.registration.EmailValidator;
 import com.moyosore.socialspring.registration.token.ConfirmationToken;
 import com.moyosore.socialspring.registration.token.ConfirmationTokenService;
@@ -23,6 +25,7 @@ public class UserService implements UserDetailsService {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final ConfirmationTokenService confirmationTokenService;
   private final EmailValidator emailValidator;
+  private final FriendListService friendListService;
 
 
   @Override
@@ -47,6 +50,8 @@ public class UserService implements UserDetailsService {
 
     userRepository.save(user);
 
+
+
     // Create confirmation token
     String token = UUID.randomUUID().toString();
     ConfirmationToken confirmationToken = new ConfirmationToken(
@@ -56,6 +61,10 @@ public class UserService implements UserDetailsService {
         user
     );
     confirmationTokenService.saveConfirmationToken(confirmationToken);
+    // Create an instance for user's friend list
+    FriendList friend = new FriendList(user);
+    friendListService.saveFriendObj(friend);
+
     // send
     return token;
   }

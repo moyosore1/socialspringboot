@@ -1,7 +1,7 @@
 package com.moyosore.socialspring.user;
 
 import com.moyosore.socialspring.comment.Comment;
-import com.moyosore.socialspring.friends.Friend;
+import com.moyosore.socialspring.friends.FriendList;
 import com.moyosore.socialspring.post.Post;
 import java.util.Collection;
 import java.util.Collections;
@@ -63,7 +63,7 @@ public class AppUser implements UserDetails {
   private Set<Comment> likedComments;
 
   @OneToOne(mappedBy = "user")
-  private Friend friend;
+  private FriendList friend;
 
 
 

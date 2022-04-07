@@ -1,6 +1,7 @@
 package com.moyosore.socialspring.user;
 
 import com.moyosore.socialspring.comment.Comment;
+import com.moyosore.socialspring.friends.Friend;
 import com.moyosore.socialspring.post.Post;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Email;
 import lombok.EqualsAndHashCode;
@@ -59,6 +61,9 @@ public class AppUser implements UserDetails {
 
   @ManyToMany(mappedBy = "likes")
   private Set<Comment> likedComments;
+
+  @OneToOne(mappedBy = "user")
+  private Friend friend;
 
 
 

@@ -46,9 +46,6 @@ public class PostService {
   }
 
 
-  public Post aMethod(Post post){
-    System.out.println("X");
-    return post;
-  }
+
 
 }

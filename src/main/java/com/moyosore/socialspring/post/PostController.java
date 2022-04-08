@@ -31,7 +31,6 @@ public class PostController {
   }
 
 
-  // post method for creating posts
   @PostMapping
   public ResponseEntity<PostResponseDTO> createPosts(@RequestBody @Valid Post post, Principal user) {
     System.out.println("got here");

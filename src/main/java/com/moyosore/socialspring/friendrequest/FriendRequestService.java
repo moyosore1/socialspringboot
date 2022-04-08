@@ -7,6 +7,7 @@ import com.moyosore.socialspring.friends.FriendListService;
 import com.moyosore.socialspring.user.AppUser;
 import com.moyosore.socialspring.user.UserService;
 import java.security.Principal;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class FriendRequestService {
     senderFriendList.addFriend(receiver);
 
     FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver).orElseThrow(() -> new ApiRequestException("Friend request not found."));
-    friendRequest.setIs_active(false);
+    friendRequest.setActive(false);
     return friendRequestRepository.save(friendRequest);
   }
 
@@ -51,8 +52,13 @@ public class FriendRequestService {
     AppUser receiver = userService.currentUser(currentUser.getName());
     AppUser sender = userService.getUserById(senderId);
     FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver).orElseThrow(() -> new ApiRequestException("Friend request does not exist."));
-    friendRequest.setIs_active(false);
+    friendRequest.setActive(false);
     return friendRequestRepository.save(friendRequest);
+  }
+
+  public List<FriendRequest> myFriendRequests(Principal currentUser){
+    AppUser appUser = userService.currentUser(currentUser.getName());
+    return friendRequestRepository.findByReceiverAndActiveTrue(appUser);
   }
 
 

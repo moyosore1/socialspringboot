@@ -62,8 +62,8 @@ public class UserService implements UserDetailsService {
     );
     confirmationTokenService.saveConfirmationToken(confirmationToken);
     // Create an instance for user's friend list
-    FriendList friend = new FriendList(user);
-    friendListService.saveFriendObj(friend);
+    FriendList newUserFriendList = new FriendList(user);
+    friendListService.saveFriendObj(newUserFriendList);
 
     // send
     return token;
@@ -76,5 +76,9 @@ public class UserService implements UserDetailsService {
 
   public int enableAppUser(String email) {
     return userRepository.enableAppUser(email);
+  }
+
+  public AppUser getUserById(Long userId){
+    return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("The user specified does not exist"));
   }
 }

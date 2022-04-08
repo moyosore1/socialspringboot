@@ -37,13 +37,16 @@ public class FriendRequest {
   @JoinColumn(name="receiver_id")
   private AppUser receiver;
 
-  private Boolean is_active = true;
+  private Boolean is_active;
 
   @CreationTimestamp
   @Temporal(value = TemporalType.TIMESTAMP)
   private Date timestamp;
 
 
-
-
+  public FriendRequest(AppUser sender, AppUser receiver) {
+    this.sender = sender;
+    this.receiver = receiver;
+    this.is_active = true;
+  }
 }

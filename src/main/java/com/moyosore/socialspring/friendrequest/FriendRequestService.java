@@ -2,6 +2,7 @@ package com.moyosore.socialspring.friendrequest;
 
 
 import com.moyosore.socialspring.exception.ApiRequestException;
+import com.moyosore.socialspring.exception.ResourceNotFoundException;
 import com.moyosore.socialspring.friends.FriendList;
 import com.moyosore.socialspring.friends.FriendListService;
 import com.moyosore.socialspring.user.AppUser;
@@ -20,32 +21,43 @@ public class FriendRequestService {
   private final UserService userService;
 
 
-  public FriendRequest acceptRequest(Long senderId, Principal currentUser){
-    AppUser sender = userService.getUserById(senderId);
-    // Get receiver's friend list and add sender
+  public FriendRequest acceptRequest(Long friendRequestId, Principal currentUser){
+    FriendRequest friendRequest = friendRequestRepository.findById(friendRequestId).orElseThrow(() -> new ResourceNotFoundException("Friend request resource "+ friendRequestId +" does not exist"));
     AppUser receiver = userService.currentUser(currentUser.getName());
-    FriendList receiverFriendList = friendListService.getFriendList(receiver);
-    receiverFriendList.addFriend(sender);
 
-    // Get sender's friend list and add receiver
-    FriendList senderFriendList = friendListService.getFriendList(sender);
-    senderFriendList.addFriend(receiver);
+    if(friendRequest.getActive() && friendRequest.getReceiver() == receiver){
+      AppUser sender = userService.getUserById(friendRequest.getSender().getId());
+      // Get receiver's friend list and add sender
+      FriendList receiverFriendList = friendListService.getFriendList(receiver);
+      receiverFriendList.addFriend(sender);
 
-    FriendRequest friendRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver).orElseThrow(() -> new ApiRequestException("Friend request not found."));
-    friendRequest.setActive(false);
-    return friendRequestRepository.save(friendRequest);
+      // Get sender's friend list and add receiver
+      FriendList senderFriendList = friendListService.getFriendList(sender);
+      senderFriendList.addFriend(receiver);
+
+
+      friendRequest.setActive(false);
+      return friendRequestRepository.save(friendRequest);
+    }
+    throw new ApiRequestException("Friend request may not be active.");
+
   }
 
   public FriendRequest sendFriendRequest(Principal currentUser, Long receiverId){
     AppUser sender = userService.currentUser(currentUser.getName());
     AppUser receiver = userService.getUserById(receiverId);
     int friendRequestCount = friendRequestRepository.checkIfFriendRequestExists(sender.getId(), receiver.getId());
-    if(friendRequestCount < 0){
+    System.out.println(friendRequestCount);
+
+    if(friendRequestCount == 0){
       FriendRequest friendRequest = new FriendRequest(sender, receiver);
+      friendRequest.setActive(true);
       return friendRequestRepository.save(friendRequest);
+    }else {
+      throw new ApiRequestException("Friend Request already exists!");
     }
 
-    throw new ApiRequestException("Sth");
+
   }
 
   public FriendRequest declineFriendRequest(Principal currentUser, Long senderId){

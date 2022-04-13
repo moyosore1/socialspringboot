@@ -16,6 +16,7 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
   @Query("SELECT COUNT(f) FROM FriendRequest f WHERE f.sender.id = ?1 AND f.receiver.id = ?2 OR f.sender.id = ?2 AND f.receiver.id = ?1")
   Integer checkIfFriendRequestExists(Long senderId, Long receiverId);
 
+
   List<FriendRequest> findByReceiverAndActiveTrue(AppUser receiver);
 
 }

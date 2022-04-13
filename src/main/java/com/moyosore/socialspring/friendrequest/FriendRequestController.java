@@ -21,7 +21,7 @@ public class FriendRequestController {
   private final FriendRequestService friendRequestService;
   private final ModelMapper modelMapper;
 
-  @PostMapping("/{receiverId}")
+  @PostMapping("/send/{receiverId}")
   public ResponseEntity<FriendRequestDTO> sendFriendRequest(@PathVariable("receiverId") Long receiverId, Principal currentUser){
     FriendRequest friendRequest = friendRequestService.sendFriendRequest(currentUser, receiverId);
     FriendRequestDTO friendRequestDTO = modelMapper.map(friendRequest, FriendRequestDTO.class);
@@ -35,9 +35,16 @@ public class FriendRequestController {
     return new ResponseEntity<List<FriendRequestDTO>>(friendRequestsDTO, HttpStatus.OK);
   }
 
-  @PostMapping("/{senderId}")
+  @PostMapping("/decline/{senderId}")
   public ResponseEntity<FriendRequestDTO> declineFriendRequest(Principal currentUser, @PathVariable("senderId") Long senderId){
     FriendRequest friendRequest = friendRequestService.declineFriendRequest(currentUser, senderId);
+    FriendRequestDTO friendRequestDTO = modelMapper.map(friendRequest, FriendRequestDTO.class);
+    return new ResponseEntity<FriendRequestDTO>(friendRequestDTO, HttpStatus.OK);
+  }
+
+  @PostMapping("/accept/{friendRequestId}")
+  public ResponseEntity<FriendRequestDTO> acceptFriendRequest(Principal currentUser, @PathVariable("friendRequestId") Long friendRequestId){
+    FriendRequest friendRequest = friendRequestService.acceptRequest(friendRequestId, currentUser);
     FriendRequestDTO friendRequestDTO = modelMapper.map(friendRequest, FriendRequestDTO.class);
     return new ResponseEntity<FriendRequestDTO>(friendRequestDTO, HttpStatus.OK);
   }

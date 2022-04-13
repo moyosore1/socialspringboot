@@ -3,6 +3,7 @@ package com.moyosore.socialspring.friends;
 
 import com.moyosore.socialspring.user.AppUser;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,10 +13,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 public class FriendList {
@@ -29,7 +34,7 @@ public class FriendList {
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "friend_list_sequence")
   private Long id;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "app_user_id")
   private AppUser user;
 

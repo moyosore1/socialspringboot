@@ -10,7 +10,7 @@ public class FriendRequestDTO {
   private Long id;
   private UserDTO sender;
   private UserDTO receiver;
-  private Boolean is_active;
+  private boolean active;
   private Date dateCreated;
 
 }

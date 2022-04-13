@@ -4,6 +4,7 @@ package com.moyosore.socialspring.friendrequest;
 import com.moyosore.socialspring.exception.ApiRequestException;
 import com.moyosore.socialspring.exception.ResourceNotFoundException;
 import com.moyosore.socialspring.friends.FriendList;
+import com.moyosore.socialspring.friends.FriendListRepository;
 import com.moyosore.socialspring.friends.FriendListService;
 import com.moyosore.socialspring.user.AppUser;
 import com.moyosore.socialspring.user.UserService;
@@ -19,6 +20,7 @@ public class FriendRequestService {
   private final FriendRequestRepository friendRequestRepository;
   private final FriendListService friendListService;
   private final UserService userService;
+  private final FriendListRepository friendListRepository;
 
 
   public FriendRequest acceptRequest(Long friendRequestId, Principal currentUser){
@@ -30,10 +32,13 @@ public class FriendRequestService {
       // Get receiver's friend list and add sender
       FriendList receiverFriendList = friendListService.getFriendList(receiver);
       receiverFriendList.addFriend(sender);
+      friendListRepository.save(receiverFriendList);
+
 
       // Get sender's friend list and add receiver
       FriendList senderFriendList = friendListService.getFriendList(sender);
       senderFriendList.addFriend(receiver);
+      friendListRepository.save(senderFriendList);
 
 
       friendRequest.setActive(false);

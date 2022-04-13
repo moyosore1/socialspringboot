@@ -5,6 +5,7 @@ import com.moyosore.socialspring.exception.ResourceNotFoundException;
 import com.moyosore.socialspring.user.AppUser;
 import com.moyosore.socialspring.user.UserService;
 import java.security.Principal;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,9 @@ public class FriendListService {
 
   public FriendList getFriends(Principal user) {
     AppUser currentUser = userService.currentUser(user.getName());
-    return friendListRepository.findByUserId(currentUser.getId()).get();
+    Optional<FriendList> friendList = friendListRepository.findByUserId(currentUser.getId());
+    System.out.println(friendList);
+    return friendList.get();
   }
 
   public FriendList getFriendList(AppUser user) {
@@ -30,7 +33,8 @@ public class FriendListService {
 
 
   public FriendList getAUsersFriendList(Long userId) {
-    return friendListRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("Friend list for user with id: "+ userId+" not found."));
+    AppUser user = userService.getUserById(userId);
+    return friendListRepository.findByUserId(user.getId()).orElseThrow(() -> new ResourceNotFoundException("Friend list for user with id: "+ userId+" not found."));
   }
 
 

@@ -9,6 +9,6 @@ public class FriendListDTO {
   private Long id;
   private UserDTO user;
   private List<UserDTO> friends;
-  
+
 
 }
